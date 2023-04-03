@@ -1,9 +1,7 @@
-// ignore_for_file: avoid_print
+import 'dart:developer' show log;
 
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-// import 'package:mynotes/firebase_options.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -57,7 +55,7 @@ class _RegisterViewState extends State<RegisterView> {
               decoration:
                   const InputDecoration(hintText: 'Enter your password here'),
             ),
-            FilledButton(
+            ElevatedButton(
                 onPressed: () async {
                   final email = _email.text;
                   final password = _password.text;
@@ -65,16 +63,16 @@ class _RegisterViewState extends State<RegisterView> {
                     final userCredential = await FirebaseAuth.instance
                         .createUserWithEmailAndPassword(
                             email: email, password: password);
-                    print(userCredential);
+                    log(userCredential.toString());
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'email-already-in-use') {
-                      print('User already exists');
+                      log('User already exists');
                     } else if (e.code == 'weak-password') {
-                      print('Password should be at least 6 characters ');
+                      log('Password should be at least 6 characters ');
                     } else if (e.code == 'invalid-email') {
-                      print('Email is invalid');
+                      log('Email is invalid');
                     } else {
-                      print(e.code);
+                      log(e.code);
                     }
                   }
                   // print(UserCredential);
