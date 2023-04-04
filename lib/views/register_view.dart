@@ -1,8 +1,9 @@
-import 'dart:developer' show log;
+// import 'dart:developer' show log;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
+import 'package:mynotes/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -56,29 +57,60 @@ class _RegisterViewState extends State<RegisterView> {
               decoration:
                   const InputDecoration(hintText: 'Enter your password here'),
             ),
-            ElevatedButton(
-                onPressed: () async {
-                  final email = _email.text;
-                  final password = _password.text;
-                  try {
-                    final userCredential = await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: email, password: password);
-                    log(userCredential.toString());
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'email-already-in-use') {
-                      log('User already exists');
-                    } else if (e.code == 'weak-password') {
-                      log('Password should be at least 6 characters ');
-                    } else if (e.code == 'invalid-email') {
-                      log('Email is invalid');
-                    } else {
-                      log(e.code);
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    final email = _email.text;
+                    final password = _password.text;
+                    try {
+                      await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                              email: email, password: password);
+                      // log(userCredential.toString());
+                      // log(userCredential.toString());
+                      final user = FirebaseAuth.instance.currentUser;
+                      await user?.sendEmailVerification();
+                      if (!mounted) return;
+                      Navigator.of(context).pushNamed(
+                        verifyEmailRoute,
+                      );
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'email-already-in-use') {
+                        // log('User already exists');
+                        await showErrorDialog(
+                          context,
+                          'User already exists',
+                        );
+                      } else if (e.code == 'weak-password') {
+                        await showErrorDialog(
+                          context,
+                          'Password should be at least 6 characters ',
+                        );
+                        // log('Password should be at least 6 characters ');
+                      } else if (e.code == 'invalid-email') {
+                        // log('Email is invalid');
+                        await showErrorDialog(
+                          context,
+                          'Email is invalid',
+                        );
+                      } else {
+                        await showErrorDialog(
+                          context,
+                          'Error:  $e.code',
+                        );
+                        // log(e.code);
+                      }
+                    } catch (e) {
+                      await showErrorDialog(
+                        context,
+                        e.toString(),
+                      );
                     }
-                  }
-                  // print(UserCredential);
-                },
-                child: const Text('Register')),
+                    // print(UserCredential);
+                  },
+                  child: const Text('Register')),
+            ),
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
