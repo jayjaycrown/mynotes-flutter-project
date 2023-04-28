@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
-import 'package:mynotes/services/auth/auth_user.dart';
+// import 'package:mynotes/services/auth/auth_user.dart';
 
 class VerifyEmailView extends StatelessWidget {
   const VerifyEmailView({super.key});

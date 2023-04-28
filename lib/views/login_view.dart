@@ -11,6 +11,22 @@ class LoginView extends StatefulWidget {
   State<LoginView> createState() => _LoginViewState();
 }
 
+MaterialColor myCustomColor = const MaterialColor(
+  0xFF088E48,
+  <int, Color>{
+    50: Color(0xFFE0F4E4),
+    100: Color(0xFFB3E4C6),
+    200: Color(0xFF80D4A4),
+    300: Color(0xFF4DC482),
+    400: Color(0xFF26B868),
+    500: Color(0xFF088E48), // The custom color value
+    600: Color(0xFF007F3D),
+    700: Color(0xFF006F36),
+    800: Color(0xFF005F2F),
+    900: Color(0xFF004D22),
+  },
+);
+
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
